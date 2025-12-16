@@ -21,8 +21,15 @@ fun main() {
 	chromeOptions.addArguments("start-maximized")
 	val www = ChromeDriver(chromeOptions)
 	val web = WebDriverWait(www, Duration.ofSeconds(5))	// for all elements www.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
-	
-	// Reusable Functions
+	/**
+	 * Reloads the current page in the browser.
+	 *
+	 * @param repeat Number of times to refresh the page (default is 1)
+	 * @return Unit
+	 *
+	 * Example:
+	 * refreshPage(3) // reloads the current page 3 times
+	 */
 	fun refreshPage(repeat:Int = 1) {
 		
 		val page = www.currentUrl
@@ -33,6 +40,17 @@ fun main() {
 		}
 		
 	}
+	
+	/**
+	 * Clicks an element safely on the page.
+	 * Waits for the element to be visible and retries if an exception occurs.
+	 *
+	 * @param xpath XPath of the element to click
+	 * @return Unit
+	 *
+	 * Example:
+	 * press("//button[@id='submit']")
+	 */
 	fun press(xpath: String){
 		try{
 			web.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)))
@@ -44,25 +62,42 @@ fun main() {
 		
 	}
 	
+	/**
+	 * Returns the count of elements matching the given XPath.
+	 *
+	 * @param xpath XPath of target elements
+	 * @return Int – number of elements found (0 if none)
+	 *
+	 * Example:
+	 * val count = getItemCount("//div[@class='product']")
+	 */
 	fun getItemCount(xpath: String): Int {
-
+		
 		try{
 			// Find all elements matching the XPath expression
 			val elements: List<WebElement> = www.findElements(By.xpath(xpath))
-
+			
 			// Get the count of elements
 			return elements.size
 		}catch (e:TimeoutException){
 			print("getItemCount Exception, ")
 			return 0
 		}
-
+		
 	}
+	/**
+	 * Checks if the current page is a "404" or "Page not found".
+	 *
+	 * @return Boolean – true if page not found, false otherwise
+	 *
+	 * Example:
+	 * if (pnf()) refreshPage()
+	 */
 	fun pnf(): Boolean {
 		try{
 			val h1Element: WebElement? = www.findElement(By.tagName("h1"))
 			val pElement: WebElement? = www.findElement(By.className("NoMatch-Subtitle"))
-
+			
 			if (h1Element?.text == "404" || pElement?.text == "Page not found") {
 				print("pnf() = ")
 				return true
@@ -72,8 +107,18 @@ fun main() {
 		}catch (_:NoSuchElementException){
 			return false
 		}
-
+		
 	}
+	
+	/**
+	 * Waits until all elements matching the XPath are visible and clickable.
+	 *
+	 * @param xpath XPath of target elements
+	 * @return Unit
+	 *
+	 * Example:
+	 * loadAllElements("//li[@class='menu-item']")
+	 */
 	fun loadAllElements(xpath:String ) {
 		
 		val web1 = WebDriverWait(www, Duration.ofSeconds(3))
@@ -83,23 +128,41 @@ fun main() {
 		}catch (e:TimeoutException){
 			print("loadAllElements() Exception no elements ")
 		}
-
+		
 		val index = getItemCount(xpath)
-
+		
 		try {
 			for (plp in 1..index) {
 				web.until(ExpectedConditions.elementToBeClickable(By.xpath("$xpath[$plp]")))
 			}
-
+			
 		}catch (e:TimeoutException){
 			print("loadAllElements() Exception, ")
 		}
-
+		
 	}
+	/**
+	 * Waits until a single element becomes visible.
+	 *
+	 * @param item XPath of the element
+	 * @return Unit
+	 *
+	 * Example:
+	 * loadSingleElement("//h1[@class='title']")
+	 */
 	fun loadSingleElement(item:String){
 		val web1 = WebDriverWait(www, Duration.ofSeconds(1))
 		web1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(item)))
 	}
+	/**
+	 * Retrieves text from an element using XPath or CSS selector.
+	 *
+	 * @receiver String – XPath or CSS selector
+	 * @return String – text content of the element
+	 *
+	 * Example:
+	 * val name = "//p[@class='product-name']".text()
+	 */
 	fun String.text():String{
 		
 		fun string (): Boolean {
@@ -120,7 +183,16 @@ fun main() {
 		
 		
 	}
-
+	/**
+	 * Counts elements matching the XPath and retries if the count is higher than expected.
+	 *
+	 * @receiver String – XPath of the elements
+	 * @param num Expected number of items
+	 * @return Int – final count after retries
+	 *
+	 * Example:
+	 * val count = "//div[@class='product']".itemCount(10)
+	 */
 	fun String.itemCount(num: Int): Int {
 		
 		var elementsList = 0
@@ -148,7 +220,7 @@ fun main() {
 				} else {
 					println("xpath.itemCount $itemsCounted items")
 					return itemsCounted  // when "return" is executed it immediately exits the function,
-									//  which also stops all loops
+					//  which also stops all loops
 				}
 			}
 		} catch (e: Exception) {
@@ -157,9 +229,6 @@ fun main() {
 		
 		return elementsList
 	}
-	
-	
-	
 	
 	val mainPage = "https://qatest-dev.indvp.com/"
 	val imageNotFound = "(/html/body/div[1]/main/div/section/div/div[1]/div[1]/div/div/button/div/span)"
@@ -324,18 +393,6 @@ fun main() {
 	println(listListData)
 	//Thread.sleep(10000)
 	
-	fun createCSVFile(filePath: String, data: List<List<String>>) {
-		val file = File(filePath)
-		
-		file.bufferedWriter().use { out ->
-			// Write data to CSV file
-			data.forEach { row ->
-				out.write(row.joinToString(","))
-				out.newLine()
-			}
-		}
-		println("CSV file created successfully at $filePath")
-	}
 
 	// Create CSV file
 	val filePath = "C:\\Users\\besty\\Desktop\\Programs\\file.csv"
@@ -344,6 +401,45 @@ fun main() {
 	
 	
 	
+	
+	
+	
+	
+	
+	
+	
+	
+}
+
+/**
+ * Creates a CSV file from a 2D list of strings.
+ *
+ * @param filePath The full path where the CSV file will be saved
+ * @param data A list of rows, where each row is a list of string values
+ * @return Unit
+ *
+ * Example:
+ * val data = listOf(
+ *
+ *     listOf("Name", "Age", "Town"),
+ *     listOf("Name", "Age", "Town"),
+ *     listOf("Name", "Age", "Town"),
+ *
+ * )
+ * createCSVFile("C:\\Users\\name\\Desktop\\output.csv", data)
+ * // Creates a CSV file at the specified path
+ */
+fun createCSVFile(filePath: String, data: List<List<String>>) {
+	val file = File(filePath)
+	
+	file.bufferedWriter().use { out ->
+		// Write data to CSV file
+		data.forEach { row ->
+			out.write(row.joinToString(","))
+			out.newLine()
+		}
+	}
+	println("CSV file created successfully at $filePath")
 }
 
 
