@@ -51,27 +51,23 @@ Loops through:
       All visible products per page
 
 ✔ Intelligent Element Handling
-  
-  Retries element loading
-  Waits for clickability
-  Counts elements dynamically
+        Retries element loading
+        Waits for clickability
+        Counts elements dynamically
 
 ✔ Failure Detection
-
-Identifies missing product images
-Captures:
-      Category
-      Page number
-      Item index
-      Product URL
-      Product name
-      Missing image count
+      Identifies missing product images
+      Captures:
+            Category
+            Page number
+            Item index
+            Product URL
+            Product name
+            Missing image count
 
 ✔ Reporting
-
-Exports results into a CSV file
-
-Easy to analyze or attach to defect reports
+      Exports results into a CSV file
+      Easy to analyze or attach to defect reports
 
 📂 Output Example (CSV)
 Category,Page,Item,URL,Product Name,Images Not Found
