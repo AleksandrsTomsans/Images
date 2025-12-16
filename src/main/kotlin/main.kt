@@ -22,6 +22,7 @@ fun main() {
 	val www = ChromeDriver(chromeOptions)
 	val web = WebDriverWait(www, Duration.ofSeconds(5))	// for all elements www.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
 	
+	// Reusable Functions
 	fun refreshPage(repeat:Int = 1) {
 		
 		val page = www.currentUrl
@@ -187,7 +188,7 @@ fun main() {
 	
 	val listListData = mutableListOf<List<String>>()
 	
-	
+	// Loop through MENU TOP BAR
 	for((page, element) in topMenuList.withIndex()) { //
 		
 		
@@ -210,7 +211,8 @@ fun main() {
 			println("clicksNeeded = ${prev__1_2_3_4_5__next[page]} 1st loop")
 			
 			var pageNum = 1
-
+			
+			// Loop through pages of each MENU
 			for(num in 1..prev__1_2_3_4_5__next[page]) {
 				println("Page number = $pageNum  2nd loop" )
 				Thread.sleep(1000)
@@ -236,7 +238,7 @@ fun main() {
 						continue
 						
 					}else{
-						
+						// Loop through each item .click() items for every page
 						for(itemNum in 1..itemCount) {
 							
 							if(pnf()) { refreshPage(3) }
@@ -264,7 +266,7 @@ fun main() {
 									val infNum = getItemCount(imageNotFound)
 								
 									
-									
+									// Images not found will count and report all details
 									if( infNum>0 )
 									{
 										val pageRow = mutableListOf<String>()
@@ -320,14 +322,28 @@ fun main() {
 	}
 	
 	println(listListData)
-
 	//Thread.sleep(10000)
 	
+	fun createCSVFile(filePath: String, data: List<List<String>>) {
+		val file = File(filePath)
+		
+		file.bufferedWriter().use { out ->
+			// Write data to CSV file
+			data.forEach { row ->
+				out.write(row.joinToString(","))
+				out.newLine()
+			}
+		}
+		println("CSV file created successfully at $filePath")
+	}
 
 	// Create CSV file
 	val filePath = "C:\\Users\\besty\\Desktop\\Programs\\file.csv"
 	createCSVFile(filePath, listListData)
 	www.quit()
 	
+	
+	
 }
+
 
