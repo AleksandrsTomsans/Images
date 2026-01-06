@@ -1,7 +1,7 @@
-#Selenium Web Automation – Image Validation Scanner (Kotlin)
-#This project is a Kotlin + Selenium WebDriver automation script that crawls an e-commerce website and detects product pages with missing images.
+Selenium Web Automation – Image Validation Scanner (Kotlin)
+This project is a Kotlin + Selenium WebDriver automation script that crawls an e-commerce website and detects product pages with missing images.
 
-#The script:
+The script:
       Navigates through top menu categories
       Iterates pagination
       Opens each product detail page
