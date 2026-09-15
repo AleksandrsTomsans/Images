@@ -17,7 +17,7 @@ import java.time.Duration
 
 
 fun WebDriver.press(xpath: String){
-	this.findElement(By.xpath(xpath)).click();
+	this.findElement(By.xpath(xpath)).click()
 }
 fun WebDriver.getItemCount(xpath: String): Int {
 	// Find all elements matching the XPath expression
@@ -116,6 +116,5 @@ fun generateDesktopCSVReport(dataRows: List<List<String>>) {
 			writer.append(row.joinToString(separator = ",")).append("\n")
 		}
 	}
-	
 	println("📊 Report successfully saved to your Desktop at: $csvFilePath")
 }
