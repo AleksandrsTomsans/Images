@@ -8,11 +8,14 @@ import org.openqa.selenium.chrome.ChromeOptions
 import org.openqa.selenium.support.ui.ExpectedConditions
 import org.openqa.selenium.support.ui.WebDriverWait
 import java.io.File
+import java.io.FileWriter
+import java.nio.file.Paths
 import java.time.Duration
 
 
 
 fun main() {
+	
 	
 	
 	WebDriverManager.chromedriver().setup()
@@ -21,6 +24,7 @@ fun main() {
 	chromeOptions.addArguments("start-maximized")
 	val www = ChromeDriver(chromeOptions)
 	val web = WebDriverWait(www, Duration.ofSeconds(5))	// for all elements www.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS)
+	
 	/**
 	 * Reloads the current page in the browser.
 	 *
@@ -31,16 +35,16 @@ fun main() {
 	 * refreshPage(3) // reloads the current page 3 times
 	 */
 	fun refreshPage(repeat:Int = 1) {
-		
+
 		val page = www.currentUrl
-		
+
 		repeat(repeat){
 			www.get(page)
 			println("Refresh page $page")
 		}
-		
+
 	}
-	
+
 	/**
 	 * Clicks an element safely on the page.
 	 * Waits for the element to be visible and retries if an exception occurs.
@@ -59,9 +63,9 @@ fun main() {
 			refreshPage()
 			www.findElement(By.xpath(xpath)).click()
 		}
-		
+
 	}
-	
+
 	/**
 	 * Returns the count of elements matching the given XPath.
 	 *
@@ -72,19 +76,20 @@ fun main() {
 	 * val count = getItemCount("//div[@class='product']")
 	 */
 	fun getItemCount(xpath: String): Int {
-		
+
 		try{
 			// Find all elements matching the XPath expression
 			val elements: List<WebElement> = www.findElements(By.xpath(xpath))
-			
+
 			// Get the count of elements
 			return elements.size
 		}catch (e:TimeoutException){
 			print("getItemCount Exception, ")
 			return 0
 		}
-		
+
 	}
+
 	/**
 	 * Checks if the current page is a "404" or "Page not found".
 	 *
@@ -97,7 +102,7 @@ fun main() {
 		try{
 			val h1Element: WebElement? = www.findElement(By.tagName("h1"))
 			val pElement: WebElement? = www.findElement(By.className("NoMatch-Subtitle"))
-			
+
 			if (h1Element?.text == "404" || pElement?.text == "Page not found") {
 				print("pnf() = ")
 				return true
@@ -107,9 +112,9 @@ fun main() {
 		}catch (_:NoSuchElementException){
 			return false
 		}
-		
+
 	}
-	
+
 	/**
 	 * Waits until all elements matching the XPath are visible and clickable.
 	 *
@@ -120,27 +125,28 @@ fun main() {
 	 * loadAllElements("//li[@class='menu-item']")
 	 */
 	fun loadAllElements(xpath:String ) {
-		
+
 		val web1 = WebDriverWait(www, Duration.ofSeconds(3))
-		
+
 		try {
 			web1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)))
 		}catch (e:TimeoutException){
 			print("loadAllElements() Exception no elements ")
 		}
-		
+
 		val index = getItemCount(xpath)
-		
+
 		try {
 			for (plp in 1..index) {
 				web.until(ExpectedConditions.elementToBeClickable(By.xpath("$xpath[$plp]")))
 			}
-			
+
 		}catch (e:TimeoutException){
 			print("loadAllElements() Exception, ")
 		}
-		
+
 	}
+
 	/**
 	 * Waits until a single element becomes visible.
 	 *
@@ -154,6 +160,7 @@ fun main() {
 		val web1 = WebDriverWait(www, Duration.ofSeconds(1))
 		web1.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(item)))
 	}
+
 	/**
 	 * Retrieves text from an element using XPath or CSS selector.
 	 *
@@ -164,25 +171,26 @@ fun main() {
 	 * val name = "//p[@class='product-name']".text()
 	 */
 	fun String.text():String{
-		
+
 		fun string (): Boolean {
 			val vowel = setOf('.')
 			val string = this.count{ it in vowel }
-			
+
 			return string<1
 		}
-		
+
 		return if(string()){
 			www.findElement(By.xpath(this)).text
-			
+
 		}else{
 			www.findElement(By.cssSelector(this)).text
 		}
-		
-		
-		
-		
+
+
+
+
 	}
+
 	/**
 	 * Counts elements matching the XPath and retries if the count is higher than expected.
 	 *
@@ -194,27 +202,27 @@ fun main() {
 	 * val count = "//div[@class='product']".itemCount(10)
 	 */
 	fun String.itemCount(num: Int): Int {
-		
+
 		var elementsList = 0
 		var countReloads = 1
 		val page = www.currentUrl
-		
-		
+
+
 		try
 		{
 			while (countReloads <= 5)
 			{
 				web.until(ExpectedConditions.elementToBeClickable(By.xpath(this)))
-				
+
 				val elements: List<WebElement> = www.findElements(By.xpath(this))
 				val itemsCounted = elements.size
-				
+
 				if (itemsCounted > num) {
 					elementsList = itemsCounted
 					println("$itemsCounted items found. Reloading page...")
-					
+
 					www.get(page)
-					
+
 					//www.navigate().refresh()
 					countReloads++
 				} else {
@@ -226,10 +234,10 @@ fun main() {
 		} catch (e: Exception) {
 			println("string.ItemCount Exception: ${e.message}")
 		}
-		
+
 		return elementsList
 	}
-	
+
 	val mainPage = "https://qatest-dev.indvp.com/"
 	val imageNotFound = "(/html/body/div[1]/main/div/section/div/div[1]/div[1]/div/div/button/div/span)"
 	val topMenuElement = "(//li[@class='MenuOverlay-Item'])" // 8 items in menu with same xpath
@@ -333,7 +341,8 @@ fun main() {
 									press("$product[$itemNum]")
 									loadAllElements(imageNotFound)
 									val infNum = getItemCount(imageNotFound)
-								
+									
+									val listListData = mutableListOf<List<String>>()
 									
 									// Images not found will count and report all details
 									if( infNum>0 )
@@ -396,11 +405,14 @@ fun main() {
 
 	// Create CSV file
 	val filePath = "C:\\Users\\besty\\Desktop\\Programs\\file.csv"
+	
+	
+	
+	
+	
+	generateDesktopCSVReport(listListData)
 	createCSVFile(filePath, listListData)
 	www.quit()
-	
-	
-	
 	
 	
 	
@@ -429,17 +441,15 @@ fun main() {
  * createCSVFile("C:\\Users\\name\\Desktop\\output.csv", data)
  * // Creates a CSV file at the specified path
  */
-fun createCSVFile(filePath: String, data: List<List<String>>) {
-	val file = File(filePath)
-	
-	file.bufferedWriter().use { out ->
-		// Write data to CSV file
-		data.forEach { row ->
-			out.write(row.joinToString(","))
-			out.newLine()
-		}
-	}
-	println("CSV file created successfully at $filePath")
-}
-
-
+//fun createCSVFile(filePath: String, data: List<List<String>>) {
+//	val file = File(filePath)
+//
+//	file.bufferedWriter().use { out ->
+//		// Write data to CSV file
+//		data.forEach { row ->
+//			out.write(row.joinToString(","))
+//			out.newLine()
+//		}
+//	}
+//	println("CSV file created successfully at $filePath")
+//}

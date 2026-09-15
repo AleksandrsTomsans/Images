@@ -157,6 +157,13 @@ fun clickWithRetry(xpath: String) {
 		}
 	}
 }
+
+
+
+
+
+
+
 fun refreshPage() {
 	driver.navigate().refresh()
 	wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath(topMenuElement)))
