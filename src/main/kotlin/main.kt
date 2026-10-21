@@ -342,7 +342,7 @@ fun main() {
 									loadAllElements(imageNotFound)
 									val infNum = getItemCount(imageNotFound)
 									
-									val listListData = mutableListOf<List<String>>()
+									//val listListData = mutableListOf<List<String>>()
 									
 									// Images not found will count and report all details
 									if( infNum>0 )
